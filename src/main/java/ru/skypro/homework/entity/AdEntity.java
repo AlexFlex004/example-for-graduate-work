@@ -26,11 +26,11 @@ public class AdEntity {
     @JoinColumn(name = "author_id", nullable = false)
     private UserEntity author;
 
-    // 👇 ВАЖНО: связь с комментариями
+
     @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
     private List<CommentEntity> comments;
 
-    // getters & setters
+
 
     public Integer getId() {
         return id;

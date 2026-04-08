@@ -6,8 +6,12 @@ import ru.skypro.homework.dto.comment.Comments;
 import ru.skypro.homework.dto.comment.CreateOrUpdateComment;
 import ru.skypro.homework.service.CommentService;
 
+import java.security.Principal;
 import java.util.List;
-
+/**
+ * Контроллер для работы с комментариями к объявлениям.
+ * Позволяет получать, добавлять и удалять комментарии.
+ */
 @RestController
 @RequestMapping("/ads/{adId}/comments")
 public class CommentsController {
@@ -18,23 +22,38 @@ public class CommentsController {
         this.commentService = commentService;
     }
 
-    // Получить все комментарии к объявлению
+    /**
+     * Контроллер для работы с комментариями к объявлениям.
+     * Позволяет получать, добавлять и удалять комментарии.
+     */
     @GetMapping
     public List<Comment> getComments(@PathVariable Integer adId) {
         return commentService.getCommentsByAd(adId);
     }
 
-    // Добавить комментарий
+    /**
+     * Получает список комментариев для объявления.
+     *
+     * @param adId идентификатор объявления
+     * @return список комментариев
+     */
     @PostMapping
     public Comment addComment(@PathVariable Integer adId,
                               @RequestBody CreateOrUpdateComment dto,
-                              @RequestParam Integer userId) {
-        return commentService.addComment(adId, dto, userId);
+                              Principal principal) {
+        return commentService.addComment(adId, dto, principal.getName());
     }
 
-    // Удалить комментарий
+    /**
+     * Удаляет комментарий.
+     * Удаление доступно владельцу или администратору.
+     *
+     * @param commentId идентификатор комментария
+     * @param principal текущий пользователь
+     */
     @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Integer commentId) {
-        commentService.deleteComment(commentId);
+    public void deleteComment(@PathVariable Integer commentId,
+                              Principal principal) {
+        commentService.deleteComment(commentId, principal.getName());
     }
 }

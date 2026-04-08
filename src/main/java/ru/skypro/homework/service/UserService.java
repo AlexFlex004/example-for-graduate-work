@@ -1,61 +1,95 @@
 package ru.skypro.homework.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 
-import java.util.Optional;
-
+/**
+ * Сервис для работы с пользователями.
+ * Обеспечивает получение, обновление данных пользователя,
+ * изменение пароля и обновление изображения.
+ */
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository,
+                       UserMapper userMapper,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User getUser(Integer id) {
-        UserEntity entity = userRepository.findById(id)
+    /**
+     * Получает пользователя по имени.
+     *
+     * @param username имя пользователя
+     * @return пользователь в виде DTO
+     * @throws RuntimeException если пользователь не найден
+     */
+    public User getUser(String username) {
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return userMapper.toDto(entity);
+        return userMapper.toDto(user);
     }
 
-    public User updateUser(Integer id, UpdateUser updateUser) {
-        UserEntity entity = userRepository.findById(id)
+    /**
+     * Обновляет данные пользователя.
+     *
+     * @param username имя пользователя
+     * @param userDto новые данные пользователя
+     * @return обновлённый пользователь
+     * @throws RuntimeException если пользователь не найден
+     */
+    public User updateUser(String username, User userDto) {
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        entity.setFirstName(updateUser.getFirstName());
-        entity.setLastName(updateUser.getLastName());
-        entity.setPhone(updateUser.getPhone());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPhone(userDto.getPhone());
 
-        UserEntity saved = userRepository.save(entity);
-
-        return userMapper.toDto(saved);
+        return userMapper.toDto(userRepository.save(user));
     }
 
-    public void setPassword(NewPassword request) {
-        // позже реализуешь логику
-    }
+    /**
+     * Изменяет пароль пользователя.
+     *
+     * @param username имя пользователя
+     * @param newPassword объект с текущим и новым паролем
+     * @throws RuntimeException если текущий пароль неверный или пользователь не найден
+     */
+    public void changePassword(String username, NewPassword newPassword) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    public User getCurrentUser() {
-        // временно (пока нет security)
-        return getUser(1);
-    }
 
-    public UpdateUser updateUserProfile(UpdateUser request) {
-        // временно можно просто вернуть
-        return request;
-    }
+        if (!passwordEncoder.matches(newPassword.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Wrong current password");
+        }
 
-    public void updateUserImage() {
-        // заглушка
+        user.setPassword(passwordEncoder.encode(newPassword.getNewPassword()));
+
+        userRepository.save(user);
+    }
+    /**
+     * Обновляет изображение пользователя.
+     *
+     * @param username имя пользователя
+     * @throws RuntimeException если пользователь не найден
+     */
+    public void updateUserImage(String username) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.save(user);
     }
 }

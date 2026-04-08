@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Login;
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.service.AuthService;
-
+/**
+ * Контроллер для аутентификации пользователей.
+ * Отвечает за регистрацию и проверку учетных данных.
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -21,15 +24,23 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // Регистрация
+    /**
+     * Регистрация нового пользователя.
+     *
+     * @param request данные для регистрации (username и password)
+     */
     @PostMapping("/register")
     public void register(@RequestBody Register request) {
         authService.register(request);
     }
 
-    // Логин
+    /**
+     * Регистрация нового пользователя.
+     *
+     * @param request данные для регистрации (username и password)
+     */
     @PostMapping("/login")
     public void login(@RequestBody Login request) {
-        authService.login(request);
+        authService.login(request.getUsername(), request.getPassword());
     }
 }

@@ -35,7 +35,7 @@ public class CommentEntity {
     public CommentEntity() {
     }
 
-    // Геттеры и сеттеры
+
 
     public Integer getId() {
         return id;

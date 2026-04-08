@@ -12,7 +12,7 @@ import java.time.ZoneOffset;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    // Entity → DTO
+
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "text", target = "text")
     @Mapping(source = "author.id", target = "author")
@@ -21,14 +21,14 @@ public interface CommentMapper {
     @Mapping(target = "createdAt", expression = "java(toEpochMillis(entity.getCreatedAt()))")
     Comment toDto(CommentEntity entity);
 
-    // DTO → Entity
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "ad", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     CommentEntity toEntity(CreateOrUpdateComment dto);
 
-    // helper метод
+
     default Long toEpochMillis(LocalDateTime dateTime) {
         return dateTime == null ? null :
                 dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();

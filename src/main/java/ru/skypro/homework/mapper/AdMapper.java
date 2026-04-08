@@ -7,11 +7,6 @@ import ru.skypro.homework.dto.ad.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ad.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 
-import org.mapstruct.Mapper;
-import ru.skypro.homework.dto.ad.Ad;
-import ru.skypro.homework.dto.ad.CreateOrUpdateAd;
-import ru.skypro.homework.entity.AdEntity;
-
 @Mapper(componentModel = "spring")
 public interface AdMapper {
 

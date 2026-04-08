@@ -1,5 +1,7 @@
 package ru.skypro.homework.entity;
 
+import ru.skypro.homework.dto.Role;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,8 +13,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     private String firstName;
@@ -21,15 +25,24 @@ public class UserEntity {
 
     private String phone;
 
-    // 👇 Объявления пользователя
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    private String image;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<AdEntity> ads;
 
-    // 👇 Комментарии пользователя
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
 
-    // getters & setters
+    public UserEntity() {
+    }
+
+
 
     public Integer getId() {
         return id;
@@ -77,6 +90,22 @@ public class UserEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<AdEntity> getAds() {

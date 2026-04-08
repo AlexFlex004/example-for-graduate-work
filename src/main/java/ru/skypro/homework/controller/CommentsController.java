@@ -4,29 +4,37 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.comment.Comment;
 import ru.skypro.homework.dto.comment.Comments;
 import ru.skypro.homework.dto.comment.CreateOrUpdateComment;
+import ru.skypro.homework.service.CommentService;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("/ads/{adId}/comments")
 public class CommentsController {
 
-    @GetMapping("/ads/{id}/comments")
-    public Comments getComments(@PathVariable Integer id) {
-        return new Comments();
+    private final CommentService commentService;
+
+    public CommentsController(CommentService commentService) {
+        this.commentService = commentService;
     }
 
-    @PostMapping("/ads/{id}/comments")
-    public Comment addComment(@PathVariable Integer id,
-                              @RequestBody CreateOrUpdateComment request) {
-        return new Comment();
+    // Получить все комментарии к объявлению
+    @GetMapping
+    public List<Comment> getComments(@PathVariable Integer adId) {
+        return commentService.getCommentsByAd(adId);
     }
 
-    @PatchMapping("/ads/{adId}/comments/{commentId}")
-    public Comment updateComment(@PathVariable Integer adId,
-                                 @PathVariable Integer commentId,
-                                 @RequestBody CreateOrUpdateComment request) {
-        return new Comment();
+    // Добавить комментарий
+    @PostMapping
+    public Comment addComment(@PathVariable Integer adId,
+                              @RequestBody CreateOrUpdateComment dto,
+                              @RequestParam Integer userId) {
+        return commentService.addComment(adId, dto, userId);
     }
 
-    @DeleteMapping("/ads/{adId}/comments/{commentId}")
-    public void deleteComment(@PathVariable Integer adId,
-                              @PathVariable Integer commentId) {
+    // Удалить комментарий
+    @DeleteMapping("/{commentId}")
+    public void deleteComment(@PathVariable Integer commentId) {
+        commentService.deleteComment(commentId);
     }
 }

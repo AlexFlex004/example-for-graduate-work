@@ -11,18 +11,16 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "text", nullable = false)
     private String text;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // Автор комментария (много комментариев → один пользователь)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private UserEntity author;
 
-    // Объявление, к которому относится комментарий
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id", nullable = false)
     private AdEntity ad;
@@ -34,7 +32,6 @@ public class CommentEntity {
 
     public CommentEntity() {
     }
-
 
 
     public Integer getId() {

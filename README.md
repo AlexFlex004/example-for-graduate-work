@@ -90,22 +90,6 @@ DELETE /ads/{id} — удалить
 
 ---
 
-### Тестирование
-
-Использовать Postman или Swagger (если подключен)
-
-## Аутентификация
-
-Используется **Basic Authentication**.
-
-Пример:
-
-В Postman:
-- Authorization → Basic Auth  
-- Ввести логин и пароль  
-
----
-
 ### Комментарии
 
 | Метод | Endpoint                             | Описание           |
@@ -113,6 +97,12 @@ DELETE /ads/{id} — удалить
 | GET  | /ads/{adId}/comments                | Получить все      |
 | POST | /ads/{adId}/comments                | Добавить          |
 | DELETE | /ads/{adId}/comments/{commentId} | Удалить           |
+
+---
+
+### Тестирование
+
+Использовать Postman или Swagger (если подключен)
 
 ---
 

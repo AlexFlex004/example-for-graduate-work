@@ -51,6 +51,49 @@ Mapper → преобразование данных
 
 ---
 
+## Быстрый старт
+
+### 1. Клонировать проект
+git clone <ссылка на репозиторий>
+
+### 2. Настроить БД
+Создать базу данных PostgreSQL и указать параметры в application.properties:
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/skyavito
+spring.datasource.username=skyavito_user
+spring.datasource.password=1234
+
+### 3. Запустить приложение
+Запустить класс HomeworkApplication
+
+Сервер будет доступен:
+http://localhost:8080
+
+---
+
+### Авторизация
+
+Используется Basic Auth
+
+В Postman:
+- Authorization → Basic Auth
+- Ввести логин и пароль пользователя
+
+---
+
+### Основные эндпоинты
+
+GET /ads — получить объявления  
+POST /ads — создать объявление  
+GET /ads/{id} — получить объявление  
+DELETE /ads/{id} — удалить  
+
+---
+
+### Тестирование
+
+Использовать Postman или Swagger (если подключен)
+
 ## Аутентификация
 
 Используется **Basic Authentication**.
@@ -62,12 +105,6 @@ Mapper → преобразование данных
 - Ввести логин и пароль  
 
 ---
-
-## Запуск проекта
-
-### 1. Клонировать репозиторий
-### 2. Настроить БД (application.properties)
-### 2. Настроить БД (application.properties)
 
 ### Комментарии
 

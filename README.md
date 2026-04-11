@@ -144,9 +144,106 @@ spring.servlet.multipart.file-size-threshold=2KB
 
 images.upload.dir=./uploads/images
 
+---
+
 ### Тестирование
 
 Использовать Postman
+
+---
+
+## Архитектура проекта
+
+Проект построен по многослойной архитектуре (Layered Architecture):
+
+
+Client (Frontend / Postman)
+↓
+Controller Layer (REST API)
+↓
+Service Layer (Business Logic)
+↓
+Repository Layer (Data Access)
+↓
+Database (PostgreSQL)
+
+---
+
+### Детализация слоёв
+
+
+Controller
+├── AuthController
+├── AdController
+├── CommentController
+├── ImageController
+└── UserController
+↓
+Service
+├── AuthService
+├── AdService
+├── CommentService
+├── ImageService
+└── UserService
+↓
+Repository (Spring Data JPA)
+├── UserRepository
+├── AdRepository
+├── CommentRepository
+└── RoleRepository
+↓
+Database (PostgreSQL)
+├── users
+├── ads
+├── comments
+└── roles
+
+
+### Модели данных
+
+---
+
+Entity Layer:
+├── UserEntity
+├── AdEntity
+├── CommentEntity
+└── RoleEntity
+
+DTO Layer:
+├── User / UpdateUser / Register
+├── Ad / Ads / ExtendedAd
+├── Comment / Comments
+└── CreateOrUpdate DTOs
+
+---
+
+### Security Flow
+
+
+Request
+↓
+Spring Security Filter Chain
+↓
+UserDetailsService (CustomUserDetailsService)
+↓
+Authentication (email + password)
+↓
+Controller Access Granted / Denied
+
+---
+
+### File Storage
+
+
+Client uploads image
+↓
+ImageController
+↓
+ImageService
+↓
+Local File System (uploads/images/)
+↓
+Image URL returned to client
 
 ---
 

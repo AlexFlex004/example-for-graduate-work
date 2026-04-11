@@ -173,30 +173,33 @@ Database (PostgreSQL)
 
 
 Controller
-├── AuthController
-├── AdController
-├── CommentController
-├── ImageController
-└── UserController
+- AuthController
+- AdController
+- CommentController
+- ImageController
+- UserController
+
 ↓
 Service
-├── AuthService
-├── AdService
-├── CommentService
-├── ImageService
-└── UserService
+- AuthService
+- AdService
+- CommentService
+- ImageService
+- UserService
+
 ↓
 Repository (Spring Data JPA)
-├── UserRepository
-├── AdRepository
-├── CommentRepository
-└── RoleRepository
+- UserRepository
+- AdRepository
+- CommentRepository
+- RoleRepository
+
 ↓
 Database (PostgreSQL)
-├── users
-├── ads
-├── comments
-└── roles
+- users
+- ads
+- comments
+- roles
 
 
 ### Модели данных
@@ -204,16 +207,16 @@ Database (PostgreSQL)
 ---
 
 Entity Layer:
-├── UserEntity
-├── AdEntity
-├── CommentEntity
-└── RoleEntity
+- UserEntity
+- AdEntity
+- CommentEntity
+- RoleEntity
 
 DTO Layer:
-├── User / UpdateUser / Register
-├── Ad / Ads / ExtendedAd
-├── Comment / Comments
-└── CreateOrUpdate DTOs
+- User / UpdateUser / Register
+- Ad / Ads / ExtendedAd
+- Comment / Comments
+- CreateOrUpdate DTOs
 
 ---
 
@@ -222,12 +225,16 @@ DTO Layer:
 
 Request
 ↓
+
 Spring Security Filter Chain
 ↓
+
 UserDetailsService (CustomUserDetailsService)
 ↓
+
 Authentication (email + password)
 ↓
+
 Controller Access Granted / Denied
 
 ---

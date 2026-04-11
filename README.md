@@ -6,103 +6,147 @@
 
 ---
 
-## О проекте
+## Функциональность
 
-Сервис реализует REST API для работы с объявлениями:
+### Пользователи
+- Регистрация
+- Авторизация
+- Просмотр и редактирование профиля
+- Загрузка аватара
+- Смена пароля
 
-- регистрация и авторизация пользователей  
-- создание и управление объявлениями  
-- комментарии к объявлениям  
-- разграничение прав доступа (USER / ADMIN)  
+### Объявления
+- Создание объявления с изображением
+- Получение списка всех объявлений
+- Просмотр детальной информации
+- Редактирование и удаление
+- Просмотр объявлений текущего пользователя
 
-Проект построен по классической архитектуре:
-**Controller → Service → Repository → DB**
+### Комментарии
+- Добавление комментариев к объявлениям
+- Просмотр комментариев
+- Редактирование и удаление комментариев
 
----
-
-## Стек технологий
-
-- Java 17  
-- Spring Boot  
-- Spring Security  
-- Spring Data JPA  
-- PostgreSQL  
-- Maven  
-
----
-
-## Архитектура
-
-Controller → принимает HTTP-запросы  
-Service → бизнес-логика  
-Repository → работа с БД  
-Entity → модели базы данных  
-DTO → объекты для API  
-Mapper → преобразование данных  
+### Изображения
+- Загрузка изображений
+- Получение изображений по id
+- Хранение файлов в локальном хранилище
 
 ---
 
-## Особенности
+## Технологии
 
-- Используется `Principal` для получения текущего пользователя  
-- Реализован `GlobalExceptionHandler`  
-- Проверки безопасности на уровне сервиса  
-- Чистая многослойная архитектура  
+- Java 17
+- Spring Boot
+- Spring Web
+- Spring Security
+- Spring Data JPA
+- Hibernate
+- PostgreSQL
+- Maven
+- Lombok
 
 ---
 
-## Быстрый старт
+## Структура проекта
+
+
+controller/ — REST контроллеры
+service/ — бизнес-логика
+repository/ — доступ к базе данных
+entity/ — JPA сущности
+dto/ — модели запросов и ответов
+config/ — security и конфигурации
+
+
+---
+
+## Авторизация
+
+Используется Spring Security.
+
+Роли:
+- `USER` — обычный пользователь
+- `ADMIN` — администратор
+
+---
+
+## Основные эндпоинты
+
+### Auth
+
+POST /login
+POST /register
+
+
+### Ads
+
+GET /ads
+GET /ads/{id}
+POST /ads
+PATCH /ads/{id}
+DELETE /ads/{id}
+GET /ads/me
+PATCH /ads/{id}/image
+
+
+### Comments
+
+GET /ads/{id}/comments
+POST /ads/{id}/comments
+PATCH /ads/{id}/comments/{commentId}
+DELETE /ads/{id}/comments/{commentId}
+
+
+### Users
+
+GET /users/me
+PATCH /users
+PATCH /users/image
+PATCH /users/password
+
+
+### Images
+
+POST /images/upload
+GET /images/{id}
+
+
+---
+
+## Запуск проекта
 
 ### 1. Клонировать проект
-git clone <ссылка на репозиторий>
 
-### 2. Настроить БД
-Создать базу данных PostgreSQL и указать параметры в application.properties:
+в application.properties:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/skyavito
+spring.datasource.url=jdbc:postgresql://localhost:5432/skyavito?currentSchema=public
+spring.jpa.properties.hibernate.default_schema=public
 spring.datasource.username=skyavito_user
 spring.datasource.password=1234
 
-### 3. Запустить приложение
-Запустить класс HomeworkApplication
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL10Dialect
 
-Сервер будет доступен:
-http://localhost:8080
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.generate-ddl=true
 
----
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 
-### Авторизация
+spring.datasource.driver-class-name=org.postgresql.Driver
 
-Используется Basic Auth
+spring.flyway.baseline-on-migrate=true
 
-В Postman:
-- Authorization → Basic Auth
-- Ввести логин и пароль пользователя
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+spring.servlet.multipart.file-size-threshold=2KB
 
----
-
-### Основные эндпоинты
-
-GET /ads — получить объявления  
-POST /ads — создать объявление  
-GET /ads/{id} — получить объявление  
-DELETE /ads/{id} — удалить  
-
----
-
-### Комментарии
-
-| Метод | Endpoint                             | Описание           |
-|------|--------------------------------------|-------------------|
-| GET  | /ads/{adId}/comments                | Получить все      |
-| POST | /ads/{adId}/comments                | Добавить          |
-| DELETE | /ads/{adId}/comments/{commentId} | Удалить           |
-
----
+images.upload.dir=./uploads/images
 
 ### Тестирование
 
-Использовать Postman или Swagger (если подключен)
+Использовать Postman
 
 ---
 

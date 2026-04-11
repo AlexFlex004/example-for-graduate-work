@@ -3,28 +3,50 @@ package ru.skypro.homework.entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Сущность комментария.
+ * Представляет комментарий пользователя к объявлению.
+ */
 @Entity
 @Table(name = "comments")
 public class CommentEntity {
 
+    /**
+     * Уникальный идентификатор комментария.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * Текст комментария.
+     */
     @Column(name = "text", nullable = false)
     private String text;
 
+    /**
+     * Дата и время создания комментария.
+     */
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * Автор комментария.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private UserEntity author;
 
+    /**
+     * Объявление, к которому относится комментарий.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id", nullable = false)
     private AdEntity ad;
 
+    /**
+     * Автоматически устанавливает дату создания перед сохранением в БД.
+     */
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -32,7 +54,6 @@ public class CommentEntity {
 
     public CommentEntity() {
     }
-
 
     public Integer getId() {
         return id;

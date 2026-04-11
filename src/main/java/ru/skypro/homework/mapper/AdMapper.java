@@ -6,13 +6,38 @@ import ru.skypro.homework.dto.ad.Ad;
 import ru.skypro.homework.dto.ad.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ad.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface AdMapper {
+/**
+ * Маппер для преобразования между сущностью объявления (AdvertisementEntity)
+ * и DTO (Ad). Также содержит методы для создания и обновления сущности по DTO.
+ */
+@Component
+public class AdMapper {
 
-    Ad toDto(AdEntity entity);
+    public Ad toDto(AdEntity entity) {
+        Ad dto = new Ad();
+        dto.setPk(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setPrice(entity.getPrice());
+        dto.setImage(entity.getImage());
+        if (entity.getAuthor() != null) {
+            dto.setAuthor(entity.getAuthor().getId());
+        }
+        return dto;
+    }
 
-    AdEntity toEntity(CreateOrUpdateAd dto);
+    public AdEntity toEntity(CreateOrUpdateAd dto) {
+        AdEntity entity = new AdEntity();
+        entity.setTitle(dto.getTitle());
+        entity.setPrice(dto.getPrice());
+        entity.setDescription(dto.getDescription());
+        return entity;
+    }
 
-    ExtendedAd toExtendedDto(AdEntity entity);
+    public void updateEntity(AdEntity entity, CreateOrUpdateAd dto) {
+        if (dto.getTitle() != null) entity.setTitle(dto.getTitle());
+        if (dto.getPrice() != null) entity.setPrice(dto.getPrice());
+        if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
+    }
 }

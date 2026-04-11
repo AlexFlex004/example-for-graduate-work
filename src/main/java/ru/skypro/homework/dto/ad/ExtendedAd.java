@@ -1,73 +1,63 @@
 package ru.skypro.homework.dto.ad;
 
-import ru.skypro.homework.dto.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * Расширенный DTO объявления.
+ * Используется для передачи полной информации об объявлении,
+ * включая данные автора и контактную информацию.
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExtendedAd {
 
+    /**
+     * Уникальный идентификатор объявления.
+     */
     private Integer pk;
-    private String title;
-    private Integer price;
+
+    /**
+     * Имя автора объявления.
+     */
+    private String authorFirstName;
+
+    /**
+     * Фамилия автора объявления.
+     */
+    private String authorLastName;
+
+    /**
+     * Описание объявления.
+     */
     private String description;
+
+    /**
+     * Email автора объявления.
+     */
+    private String email;
+
+    /**
+     * Ссылка на изображение объявления.
+     */
     private String image;
-    private User author;
-    private Long createdAt;
 
-    public ExtendedAd() {
-    }
+    /**
+     * Контактный телефон автора объявления.
+     */
+    private String phone;
 
-    public Integer getPk() {
-        return pk;
-    }
+    /**
+     * Цена объявления.
+     */
+    private Integer price;
 
-    public void setPk(Integer pk) {
-        this.pk = pk;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Long createdAt) {
-        this.createdAt = createdAt;
-    }
+    /**
+     * Заголовок объявления.
+     */
+    private String title;
 }

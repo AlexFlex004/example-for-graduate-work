@@ -2,35 +2,46 @@ package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.comment.Comment;
 import ru.skypro.homework.dto.comment.CreateOrUpdateComment;
 import ru.skypro.homework.entity.CommentEntity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
-@Mapper(componentModel = "spring")
-public interface CommentMapper {
+/**
+ * Маппер для преобразования между CommentEntity и Comment DTO.
+ * Включает преобразование даты в миллисекунды и получение информации об авторе.
+ */
+@Component
+public class CommentMapper {
+    public Comment toDto(CommentEntity entity) {
+        Comment dto = new Comment();
+        dto.setPk(entity.getId());
+        dto.setText(entity.getText());
 
+        if (entity.getCreatedAt() != null) {
+            dto.setCreatedAt(entity.getCreatedAt()
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli());
+        }
 
-    @Mapping(source = "id", target = "pk")
-    @Mapping(source = "text", target = "text")
-    @Mapping(source = "author.id", target = "author")
-    @Mapping(source = "author.firstName", target = "authorFirstName")
-    @Mapping(source = "author", target = "authorImage", ignore = true)
-    @Mapping(target = "createdAt", expression = "java(toEpochMillis(entity.getCreatedAt()))")
-    Comment toDto(CommentEntity entity);
+        if (entity.getAuthor() != null) {
+            dto.setAuthor(entity.getAuthor().getId());
+            dto.setAuthorFirstName(entity.getAuthor().getFirstName());
+            dto.setAuthorImage(entity.getAuthor().getImage());
+        }
 
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "author", ignore = true)
-    @Mapping(target = "ad", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    CommentEntity toEntity(CreateOrUpdateComment dto);
-
-
-    default Long toEpochMillis(LocalDateTime dateTime) {
-        return dateTime == null ? null :
-                dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        return dto;
     }
+
+    public CommentEntity toEntity(CreateOrUpdateComment dto) {
+        CommentEntity entity = new CommentEntity();
+        entity.setText(dto.getText());
+        return entity;
+    }
+
 }

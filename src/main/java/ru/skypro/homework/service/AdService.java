@@ -4,6 +4,7 @@ package ru.skypro.homework.service;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.ad.Ad;
 import ru.skypro.homework.dto.ad.Ads;
 import ru.skypro.homework.dto.ad.CreateOrUpdateAd;
@@ -17,171 +18,72 @@ import ru.skypro.homework.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 /**
  * Сервис для работы с объявлениями.
- * Обеспечивает создание, получение, обновление и удаление объявлений,
- * а также получение объявлений текущего пользователя.
+ * Содержит бизнес-логику создания, получения, обновления и удаления объявлений,
+ * а также управления изображениями и объявлениями текущего пользователя.
  */
-@Service
-public class AdService {
-
-    private final AdRepository adRepository;
-    private final UserRepository userRepository;
-    private final AdMapper adMapper;
-
-    public AdService(AdRepository adRepository,
-                     UserRepository userRepository,
-                     AdMapper adMapper) {
-        this.adRepository = adRepository;
-        this.userRepository = userRepository;
-        this.adMapper = adMapper;
-    }
+public interface AdService {
 
     /**
-     * Получает список всех объявлений.
+     * Получает все объявления.
      *
-     * @return объект Ads со списком объявлений и их количеством
+     * @return список всех объявлений
      */
-    public Ads getAllAds() {
-        List<Ad> ads = adRepository.findAll()
-                .stream()
-                .map(adMapper::toDto)
-                .collect(Collectors.toList());
-
-        Ads result = new Ads();
-        result.setResults(ads);
-        result.setCount(ads.size());
-
-        return result;
-    }
-
+    Ads getAllAds();
 
     /**
      * Создаёт новое объявление.
      *
-     * @param dto данные для создания объявления
-     * @param username имя пользователя (автор объявления)
+     * @param adDto данные объявления
+     * @param image изображение объявления
+     * @param email email автора объявления
      * @return созданное объявление
      */
-    public Ad createAd(CreateOrUpdateAd dto, String username) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        AdEntity entity = adMapper.toEntity(dto);
-        entity.setAuthor(user);
-
-        return adMapper.toDto(adRepository.save(entity));
-    }
+    Ad createAd(CreateOrUpdateAd adDto, MultipartFile image, String email);
 
     /**
-     * Получает расширенную информацию об объявлении.
+     * Получает подробную информацию об объявлении по ID.
      *
      * @param id идентификатор объявления
-     * @return расширенное объявление
+     * @return расширенная информация об объявлении
      */
-    public ExtendedAd getExtendedAd(Integer id) {
-        AdEntity entity = adRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ad not found"));
-
-        return adMapper.toExtendedDto(entity);
-    }
-
+    ExtendedAd getAdById(Integer id);
 
     /**
-     * Обновляет объявление.
+     * Удаляет объявление по ID.
      *
      * @param id идентификатор объявления
-     * @param dto новые данные объявления
-     * @param username имя пользователя (для проверки прав)
+     * @param email email пользователя, выполняющего удаление
+     */
+    void deleteAd(Integer id, String email);
+
+    /**
+     * Обновляет данные объявления.
+     *
+     * @param id идентификатор объявления
+     * @param request новые данные объявления
+     * @param email email пользователя, выполняющего обновление
      * @return обновлённое объявление
-     * @throws AccessDeniedException если у пользователя нет прав
      */
-    public Ad updateAd(Integer id, CreateOrUpdateAd dto, String username) {
-        AdEntity entity = adRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ad not found"));
-
-
-        if (!isOwnerOrAdmin(entity, username)) {
-            throw new AccessDeniedException("Нет прав");
-        }
-
-        entity.setTitle(dto.getTitle());
-        entity.setDescription(dto.getDescription());
-        entity.setPrice(dto.getPrice());
-
-        return adMapper.toDto(adRepository.save(entity));
-    }
+    Ad updateAd(Integer id, CreateOrUpdateAd request, String email);
 
     /**
-     * Удаляет объявление.
+     * Получает все объявления текущего пользователя.
      *
-     * @param id идентификатор объявления
-     * @param username имя пользователя (для проверки прав)
-     * @throws AccessDeniedException если у пользователя нет прав
-     */
-    public void deleteAd(Integer id, String username) {
-        AdEntity entity = adRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ad not found"));
-
-        if (!isOwnerOrAdmin(entity, username)) {
-            throw new AccessDeniedException("Нет прав");
-        }
-
-        adRepository.delete(entity);
-    }
-
-    /**
-     * Получает объявления текущего пользователя.
-     *
-     * @param username имя пользователя
+     * @param email email пользователя
      * @return список объявлений пользователя
      */
-    public Ads getMyAds(String username) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        List<Ad> ads = adRepository.findAll()
-                .stream()
-                .filter(ad -> ad.getAuthor().equals(user))
-                .map(adMapper::toDto)
-                .collect(Collectors.toList());
-
-        Ads result = new Ads();
-        result.setResults(ads);
-        result.setCount(ads.size());
-
-        return result;
-    }
+    Ads getMyAds(String email);
 
     /**
      * Обновляет изображение объявления.
      *
      * @param id идентификатор объявления
+     * @param file новый файл изображения
+     * @param email email пользователя
+     * @return изображение в виде массива байтов
      */
-    public void updateImage(Integer id) {
-        AdEntity entity = adRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ad not found"));
-
-        adRepository.save(entity);
-    }
-
-    /**
-     * Проверяет, является ли пользователь владельцем объявления
-     * или имеет роль администратора.
-     *
-     * @param ad объявление
-     * @param username имя пользователя
-     * @return true, если есть доступ
-     */
-    private boolean isOwnerOrAdmin(AdEntity ad, String username) {
-        boolean isOwner = ad.getAuthor().getUsername().equals(username);
-
-        boolean isAdmin = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        return isOwner || isAdmin;
-    }
+    byte[] updateAdImage(Integer id, MultipartFile file, String email);
 }

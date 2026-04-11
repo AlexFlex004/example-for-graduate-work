@@ -1,9 +1,24 @@
 package ru.skypro.homework.dto.ad;
 
+/**
+ * DTO для создания или обновления объявления.
+ * Используется для передачи данных объявления через API.
+ */
 public class CreateOrUpdateAd {
 
+    /**
+     * Заголовок объявления.
+     */
     private String title;
+
+    /**
+     * Описание объявления.
+     */
     private String description;
+
+    /**
+     * Цена объявления.
+     */
     private Integer price;
 
     public CreateOrUpdateAd() {

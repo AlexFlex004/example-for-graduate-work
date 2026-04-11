@@ -1,12 +1,51 @@
 package ru.skypro.homework.dto.comment;
 
+/**
+ * DTO комментария.
+ * Используется для передачи информации о комментарии в API.
+ */
 public class Comment {
-    private Integer author;
-    private String authorImage;
-    private String authorFirstName;
-    private Long createdAt;
+
+    /**
+     * Уникальный идентификатор комментария.
+     */
     private Integer pk;
+
+    /**
+     * Идентификатор автора комментария.
+     */
+    private Integer author;
+
+    /**
+     * Ссылка на изображение автора.
+     */
+    private String authorImage;
+
+    /**
+     * Имя автора комментария.
+     */
+    private String authorFirstName;
+
+    /**
+     * Время создания комментария (timestamp).
+     */
+    private Long createdAt;
+
+    /**
+     * Текст комментария.
+     */
     private String text;
+
+    public Comment() {
+    }
+
+    public Integer getPk() {
+        return pk;
+    }
+
+    public void setPk(Integer pk) {
+        this.pk = pk;
+    }
 
     public Integer getAuthor() {
         return author;
@@ -38,14 +77,6 @@ public class Comment {
 
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Integer getPk() {
-        return pk;
-    }
-
-    public void setPk(Integer pk) {
-        this.pk = pk;
     }
 
     public String getText() {

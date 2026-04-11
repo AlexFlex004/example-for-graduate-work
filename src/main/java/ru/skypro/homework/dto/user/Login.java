@@ -1,11 +1,20 @@
-package ru.skypro.homework.dto;
+package ru.skypro.homework.dto.user;
 
-import lombok.Data;
 
-@Data
+/**
+ * DTO для входа пользователя в систему.
+ * Используется для передачи учетных данных при аутентификации.
+ */
 public class Login {
 
+    /**
+     * Имя пользователя (логин).
+     */
     private String username;
+
+    /**
+     * Пароль пользователя.
+     */
     private String password;
 
     public Login() {

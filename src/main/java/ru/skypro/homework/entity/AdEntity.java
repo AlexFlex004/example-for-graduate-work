@@ -3,33 +3,61 @@ package ru.skypro.homework.entity;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Сущность объявления.
+ * Представляет объявление, созданное пользователем, и содержит основную информацию о нём.
+ */
 @Entity
 @Table(name = "ads")
 public class AdEntity {
 
+    /**
+     * Уникальный идентификатор объявления.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
+    /**
+     * Заголовок объявления.
+     */
     @Column(name = "title", nullable = false)
     private String title;
 
+    /**
+     * Описание объявления.
+     */
     @Column(name = "description", nullable = false)
     private String description;
 
+    /**
+     * Цена объявления.
+     */
     @Column(name = "price", nullable = false)
     private Integer price;
 
+    /**
+     * Ссылка на изображение объявления.
+     */
     @Column(name = "image")
     private String image;
 
+    /**
+     * Автор объявления.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private UserEntity author;
 
+    /**
+     * Комментарии к объявлению.
+     */
     @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> comments;
+
+    public AdEntity() {
+    }
 
     public Integer getId() {
         return id;

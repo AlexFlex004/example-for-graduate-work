@@ -117,8 +117,23 @@ GET /images/{id}
 ## Запуск проекта
 
 ### 1. Клонировать проект
+### 2. Скачать и установить PostgreSQL:
+https://www.postgresql.org/download/
 
-в application.properties:
+### 3. Скачать и установить PgAdmin:
+https://www.pgadmin.org/download/
+
+В PgAdmin задать пароль (запомнить!)
+
+### 4. В PgAdmin query tool (ПКЬ по Databases) выполнить:
+
+CREATE DATABASE skyavito;
+
+CREATE USER skyavito_user WITH PASSWORD '1234';
+
+GRANT ALL PRIVILEGES ON DATABASE skyavito TO skyavito_user;
+
+### 5. В InteLLiJ IDEA в application.properties:
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/skyavito?currentSchema=public
 spring.jpa.properties.hibernate.default_schema=public

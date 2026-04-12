@@ -125,7 +125,7 @@ https://www.pgadmin.org/download/
 
 В PgAdmin задать пароль (запомнить!)
 
-### 4. В PgAdmin query tool (ПКЬ по Databases) выполнить:
+### 4. В PgAdmin query tool (ПКМ по Databases) выполнить:
 
 CREATE DATABASE skyavito;
 
